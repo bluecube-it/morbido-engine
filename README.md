@@ -13,3 +13,13 @@ per spegnere il virtual env:
 ```bash
 deactivate venv/bin/activate
 ```
+PS: il virual env in generale si puo chiamare come si vuole, quindi in caso di nome diverso bisogna aggiungere il nome della cartella nel .gitignore
+
+per usare flask:
+```bash
+python3 app.py
+```
+per aggiornare le dipendenze:
+```bash
+pip3 freeze > requirements.txt
+```
