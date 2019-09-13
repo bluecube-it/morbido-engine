@@ -5,4 +5,5 @@ from flask import json
 class Describe(Resource):
     def get(self, filename):
         tool = Tools()
-        return json.loads(tool.describe(filename))
+        shape = tool.describe(filename)
+        return {'rows': shape[0], 'columns': shape[1]}
