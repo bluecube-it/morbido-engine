@@ -42,7 +42,7 @@ class Sarima:
         tools = Tools()
         dataset = tools.get_dataset(filename, columns)
         string_seasonality = self.seasonality_to_string(self.seasonality)
-        if self.precison == "high" or self.precison == "medium" or self.precison == "low":
+        if self.precison == "high" or self.precison == "medium":
             dataset = tools.convert_to_log(dataset, string_seasonality)
         params_list = tools.get_params_list()
         model = self.cross_validation(dataset, params_list)
