@@ -3,6 +3,19 @@ import pandas as pd
 from itertools import product
 
 class Tools:
+
+    """
+    get_dataset:
+        filename: string
+        columns: [string, string]
+            columns[0]: index
+            columns[1]: input
+    """
+
+    def get_dataset(self, filename, columns):
+        dateparser = lambda x: pd.datetime.strptime(x,'%Y-%m-%d %H:00')
+        return pd.read_csv(filename, usecols=[column[0],  column[1]], index_col=[column[0]], parse_dates=[column[0]],  date_parser=dateparser)
+
     def describe(self, filename):
         return pd.read_csv(filename).describe().to_json()
 
