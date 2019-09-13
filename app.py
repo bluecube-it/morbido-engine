@@ -1,16 +1,24 @@
 from flask import Flask
+from flask import json
 from flask_restful import Resource, Api
-from helpers.sarima import Sarima
+from classes.example import Example
+from classes.tools import Tools
 
 app = Flask(__name__)
 api = Api(app)
 
-class Describe(Resource):
+class Tried(Resource):
     def get(self, word):
-        ciao = Sarima()
+        ciao = Example()
         return {'hello': ciao.hello(word)}
 
-api.add_resource(Describe, '/<string:word>')
+class Describe(Resource):
+    def get(self, filename):
+        tool = Tools()
+        return json.loads(tool.describe(filename))
+
+api.add_resource(Tried, '/example/<string:word>')
+api.add_resource(Describe, '/api/describe/<string:filename>')
 
 if __name__ == '__main__':
     app.run(debug=True)
