@@ -1,4 +1,5 @@
 from flask_restful import Resource
+from flask_restful import reqparse
 from classes.sarima import Sarima
 from flask import request, json
 
@@ -15,11 +16,14 @@ class Prediction(Resource):
         input: string
         prediction:
             - int
-            - string (month)
+            - string (month) "todo"
     """
     def post(self):
-        params = request.form['data']
-        
+        #params = request.form['data']
+        parser = reqparse.RequestParser()
+        parser.add_argument('data')
+        args = parser.parse_args()
+        params = json.loads(args.data)
         forecasting = Sarima(params['seasonality'], params['precision'])
         
         return json.loads(forecasting.get_prediction(params['filename'], [params['index'], params['input']], params['prediction']))
