@@ -9,7 +9,7 @@ api = Api(app)
 
 api.add_resource(Tried, '/example/<string:word>')
 api.add_resource(Shape, '/dataset/shape')
-api.add_resource(Prediction, '/predict/sarima')
+api.add_resource(Prediction, '/forecasts/sarima')
 
 if __name__ == '__main__':
     app.run(debug=True)
