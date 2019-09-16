@@ -1,9 +1,7 @@
 from flask_restful import Resource, reqparse
 from classes.tools import Tools
-from flask import json, request
 
 parser = reqparse.RequestParser()
-
 
 class Shape(Resource):
     def post(self):
