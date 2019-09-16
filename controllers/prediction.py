@@ -17,7 +17,7 @@ class Prediction(Resource):
         
         forecasting = Sarima(params['seasonality'], params['precision'])
         
-        return json.loads(forecasting.get_prediction(params['filename'], [params['index'], params['input']], params['prediction'])
+        return json.loads(forecasting.get_prediction(params['filename'], [params['index'], params['input']], params['prediction']))
 
         """
         usati per la prova
