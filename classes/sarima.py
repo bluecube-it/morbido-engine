@@ -29,6 +29,14 @@ class Sarima:
         else:
             return "NONE"
 
+    def int_prediction(self, prediction):
+        if prediction == 'gen' or prediction == 'mar' or prediction == 'mag' or prediction == 'lug' or prediction == 'ago' or prediction == 'ott' or prediction == 'dic':
+            return 31
+        elif prediction == 'feb':
+            return 28
+        elif prediction == 'apr' or prediction == 'giu' or prediction == 'set' or prediction == 'nov':
+            return 30
+
     """
     get_prediction:
         filename: string
@@ -44,6 +52,9 @@ class Sarima:
         string_seasonality = self.seasonality_to_string(self.seasonality)
         if self.precison == "high" or self.precison == "medium":
             dataset = tools.convert_to_log(dataset, string_seasonality)
+        if (self.seasonality == 31 or self.seasonality == 30) and type(prediction) == "string":
+            dataset = tools.montly_dataset(dataset, prediction)
+            prediction = self.int_prediction(prediction)
         params_list = tools.get_params_list()
         model = self.cross_validation(dataset, params_list)
         
@@ -60,7 +71,7 @@ class Sarima:
         best_aic = float('inf')
         best_model = None
         for params in params_list:
-            if self.precison == "low":
+            if self.precison == "low" or self.precison =="medium":
                 if sum(params) < 7:
                     model = self.seasonal_arima(dataset, params)
             else:
