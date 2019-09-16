@@ -49,6 +49,15 @@ class Tools:
 
     def convert_to_log(self, dataset, seasonality):
         return np.log1p(dataset).groupby(pd.Grouper(freq=seasonality)).sum()
+
+    """
+    montly_dataset:
+        dataset: pandas(DataFrame, TimeSeries)
+        month: int
+    """
+
+    def montly_dataset(self, dataset, month):
+        return dataset[dataset.index.month == month]
         
     """
     get_params_list:
