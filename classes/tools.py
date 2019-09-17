@@ -58,18 +58,77 @@ class Tools:
 
     def montly_dataset(self, dataset, month):
         return dataset[dataset.index.month == month]
+    
+    """
+    index_placeholder:
+        dataset: pandas(DataFrame, TimeSeries)
+        start_date: string timestamp
         
+        Add made up index to predict specific periods
+    """
+    def add_index_placeholder(self, dataset, start_date = '2000-01-01 00:00:00'):
+        index = pd.date_range(start = start_date, freq=frequency, periods=steps)
+        dataset.insert(1, 'tmp_index', index)
+        dataset.reset_index(inplace=True)
+        dataset.set_index('tmp_index', append=True, inplace=True, drop=True)
+        return dataset
+
+    """
+    restore_index:
+        dataset: pandas(DataFrame, TimeSeries)
+        index: string
+
+        Restores original index - use after add_index_placeholder()
+    """
+    def restore_index(self, dataset, index = 'index'):
+        dataset.reset_index(inplace=True)
+        dataset.set_index(index, inplace=True)
+        return dataset
+   
     """
     get_params_list:
         return a list of tuple of Sarima Params
     """
 
-    def get_params_list(self):
+    def get_params_list(self, dataset, seasonality, value_column = 'values'):
         p = range(0, 5)
         q = range(0, 5)
-        d = range(0, 2)
         ## seasonal
         Q = range(0, 5)
         P = range(0, 5)
-        D = range(0, 1)
-        return list(product(p, d, q, P, D ,Q))
+
+        d,D = self.set_trend_params(dataset, seasonality, value_column)
+        return list(product(p,d,q,P,D,Q))
+
+    """
+    set_trend_params:
+        dataset: pandas DataFrame
+        seasonality: int
+
+        Extracts trend and seasonality information from the dataset to determine the best d and D values.
+        Note: '0.1' and '0.001' are the default threshold values, change them if needed.
+    """
+    def set_trend_params(self, dataset, seasonality, value_column = 'values'):
+        data = dataset[value_column]
+        listed_df = pd.Series(data.tolist())
+        result =  listed_df.squeeze().autocorr(lag=seasonality)
+        if result < 0.1 and result > -0.1:
+            D = [0]
+        else:
+            D = [1]
+        for i in range(1, seasonality - 1):
+            result += np.abs(listed_df.autocorr(lag=i))
+        if result / seasonality  < 0.1:
+            d = [0]
+            return d, D
+        index = [0]
+        for i in range(1,len(list(data))):
+            index.append(i)
+        coeffs = np.polyfit(index, list(data), deg = 1)
+        slope = float(coeffs[-2])
+        if slope < 0.001 and slope > -0.001:
+            d = [0]
+        else:
+            d = range(1,2)
+        return d,D
+

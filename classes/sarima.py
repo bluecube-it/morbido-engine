@@ -56,7 +56,7 @@ class Sarima:
         if (self.seasonality == 31 or self.seasonality == 30) and type(prediction) == "string":
             dataset = tools.montly_dataset(dataset, prediction)
             prediction = self.int_prediction(prediction)
-        params_list = tools.get_params_list()
+        params_list = tools.get_params_list(dataset, self.seasonality, columns[1])
         model = self.cross_validation(dataset, params_list)
         
         return pd.DataFrame(model.forecast(prediction)).to_json(orient='table')
@@ -119,5 +119,6 @@ class Sarima:
                     warnings.filterwarnings('ignore')
                     self.models.append(SARIMAX(dataset, order=(params[0], params[1], params[2]), trend='t', seasonal_order=(params[3], params[4], params[5], self.seasonality)).fit(disp=-1))
                 except:
-                    self.models.append(SARIMAX(dataset, order=(0,0,0), trend='t', seasonal_order=(0,0,0, self.seasonality)).fit(disp=-1))
+                    print('Errore parametri')
+                    pass
 
