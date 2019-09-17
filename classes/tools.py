@@ -32,10 +32,8 @@ class Tools:
         seasonality: int
     """
 
-    def convert_to_exp(self, values, seasonality):
-        for el in values:
-            el = np.expm1(el / seasonality) * seasonality
-        return values
+    def convert_to_exp(self, values):
+        return np.array(np.expm1(values))
 
     """
     convert_to_log:
@@ -48,7 +46,7 @@ class Tools:
     """
 
     def convert_to_log(self, dataset, seasonality):
-        return np.log1p(dataset).groupby(pd.Grouper(freq=seasonality)).sum()
+        return np.log1p(dataset).groupby(pd.Grouper(freq=seasonality)).mean()
 
     """
     montly_dataset:
@@ -96,7 +94,7 @@ class Tools:
         ## seasonal
         Q = range(0, 5)
         P = range(0, 5)
-
+        
         d,D = self.set_trend_params(dataset, seasonality, value_column)
         return list(product(p,d,q,P,D,Q))
 
