@@ -121,5 +121,6 @@ class Sarima:
                     warnings.filterwarnings('ignore')
                     self.models.append(SARIMAX(dataset, order=(params[0], params[1], params[2]), trend='t', seasonal_order=(params[3], params[4], params[5], self.seasonality)).fit(disp=-1))
                 except:
-                    self.models.append(SARIMAX(dataset, order=(0,0,0), trend='t', seasonal_order=(0,0,0, self.seasonality)).fit(disp=-1))
+                    print('Errore parametri')
+                    pass
 
