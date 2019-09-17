@@ -6,8 +6,6 @@ from itertools import product
 from .tools import Tools
 from statsmodels.tsa.statespace.sarimax import SARIMAX
 
-#
-
 class Sarima:
     """
     __init__:
@@ -20,12 +18,12 @@ class Sarima:
         self.precison = precision
         self.models = []
 
-    def seasonality_to_string(self, seasonality):
-        if seasonality == 30:
+    def seasonality_to_string(self):
+        if self.seasonality == 30 or self.seasonality == 31:
             return "D"
-        elif seasonality == 7:
+        elif self.seasonality == 7:
             return "W"
-        elif seasonality == 12:
+        elif self.seasonality == 12:
             return "M"
         else:
             return "NONE"
@@ -50,16 +48,22 @@ class Sarima:
     def get_prediction(self, filename, columns, prediction):
         tools = Tools()
         dataset = tools.get_dataset(filename, columns)
-        string_seasonality = self.seasonality_to_string(self.seasonality)
+        string_seasonality = self.seasonality_to_string()
         if self.precison == "high" or self.precison == "medium":
             dataset = tools.convert_to_log(dataset, string_seasonality)
-        if (self.seasonality == 31 or self.seasonality == 30) and type(prediction) == "string":
+        if (self.seasonality == 31 or self.seasonality == 30 or self.seasonality == 28) and type(prediction) == "string":
             dataset = tools.montly_dataset(dataset, prediction)
             prediction = self.int_prediction(prediction)
         params_list = tools.get_params_list()
-        model = self.cross_validation(dataset, params_list)
-        
-        return pd.DataFrame(model.forecast(prediction)).to_json(orient='table')
+        model = self.cross_validation(dataset[columns[1]], params_list)
+        if self.precison == "low":
+            predicted = model.forecast(prediction)
+        elif self.precison == "medium" or self.precison == "high":
+            forecast = model.forecast(prediction)
+            index = forecast.index
+            predicted = tools.convert_to_exp(forecast)
+            print(predicted)
+        return pd.DataFrame(index, predicted).to_json(orient='table')
 
     """
     cross_validation:
@@ -75,25 +79,17 @@ class Sarima:
         while iterable < len(params_list):
             queue = []
             for i in range(5):
-                #try:
-                t = Thread(target=self.seasonal_arima, args=(dataset, params_list[iterable + i] ))
-                queue.append(t)
-                #except:
-                    #continue
-
-            for q in queue:
-                q.start()
+                try:
+                    t = Thread(target=self.seasonal_arima, args=(dataset, params_list[iterable + i] ))
+                    queue.append(t)
+                    t.start()
+                except:
+                    continue
 
             for q in queue:
                 q.join()
 
             iterable += 5
-        #for params in params_list:
-        #    if self.precison == "low" or self.precison =="medium":
-        #        if sum(params) < 7:
-        #            model = self.seasonal_arima(dataset, params)
-        #    elif self.precison == "high":
-        #       model = self.seasonal_arima(dataset, params)
 
         for model in self.models:
             try:
@@ -105,7 +101,13 @@ class Sarima:
                 continue
         return best_model
 
-
+    def period(self):
+        if self.seasonality == 31 or self.seasonality == 30 or self.seasonality == 29 or self.seasonality == 28:
+            return 1
+        elif self.seasonality == 12:
+            return 30
+        else:
+            return self.seasonality
 
     """
     seasonal_arima:
