@@ -16,7 +16,7 @@ class Tools:
         dateparser = lambda x: pd.datetime.strptime(x,'%Y-%m-%d %H:00')
         return pd.read_csv(filename, usecols=[column[0],  column[1]], index_col=[column[0]], parse_dates=[column[0]],  date_parser=dateparser)
 
-    def describe(self, filename):
+    def shape(self, filename):
         return pd.read_csv(filename).shape
 
     """
