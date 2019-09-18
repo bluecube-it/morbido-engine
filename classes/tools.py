@@ -141,7 +141,7 @@ class Tools:
         
         #date = datetime.datetime(start)
         for el in json.loads(string)['data']:
-            start += datetime.timedelta(days= 31)
+            start += datetime.timedelta(days= 30)
             print(list(start.strftime('%Y-%m-%d'))[0])
             new_json += [{'data': list(start.strftime('%Y-%m-%d'))[0], 'value': el['0']}]
         return {'data': new_json}

@@ -19,15 +19,22 @@ class Prediction(Resource):
             - string (month) "todo"
     """
     def post(self):
-        #params = request.form['data']
+        #params = request.form['data
         parser = reqparse.RequestParser()
-        parser.add_argument('data')
+        #parser.add_argument('data')
+        parser.add_argument('seasonality', type=int)        
+        parser.add_argument('precision', type=str)
+        parser.add_argument('filename', type=str)
+        parser.add_argument('index', type=str)
+        parser.add_argument('input', type=str)
+        parser.add_argument('prediction')
         args = parser.parse_args()
-        params = json.loads(args.data)
-        forecasting = Sarima(params['seasonality'], params['precision'])
+        #params = json.loads(args.data)
+        print(args)
+        forecasting = Sarima(args.seasonality, args.precision)
         
-        return forecasting.get_prediction(params['filename'], [params['index'], params['input']], params['prediction'])
+        return forecasting.get_prediction(args.filename, [args.index, args.input], args.prediction)
         """
         prova = Sarima(12, 'medium')
-        return json.loads(prova.get_prediction('dataset_finale.csv', ['date', 'values'], 12))
+        return json.loads(prova.get_prediction('dataset_finale.csv', ['date', 'values, 12))
         """

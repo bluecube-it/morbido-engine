@@ -19,6 +19,7 @@ class Sarima:
         self.models = []
 
     def seasonality_to_string(self):
+        print(type(self.seasonality))
         if self.seasonality == 30 or self.seasonality == 31:
             return "D"
         elif self.seasonality == 7:
