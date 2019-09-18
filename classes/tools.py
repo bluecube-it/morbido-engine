@@ -1,6 +1,8 @@
 import numpy as np
 import pandas as pd
 from itertools import product
+import json
+import datetime
 
 class Tools:
 
@@ -133,3 +135,13 @@ class Tools:
         else:
             d = range(1,2)
         return d,D
+
+    def json_parse(self, start, string):
+        new_json = []
+        
+        #date = datetime.datetime(start)
+        for el in json.loads(string)['data']:
+            start += datetime.timedelta(days= 31)
+            print(list(start.strftime('%Y-%m-%d'))[0])
+            new_json += [{'data': list(start.strftime('%Y-%m-%d'))[0], 'value': el['0']}]
+        return {'data': new_json}
