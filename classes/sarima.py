@@ -51,10 +51,10 @@ class Sarima:
         string_seasonality = self.seasonality_to_string()
         if self.precison == "high" or self.precison == "medium":
             dataset = tools.convert_to_log(dataset, string_seasonality)
-        if (self.seasonality == 31 or self.seasonality == 30 or self.seasonality == 28) and type(prediction) == "string":
+        if (string_seasonality == "D") and type(prediction) == type("string"):
             dataset = tools.montly_dataset(dataset, prediction)
             prediction = self.int_prediction(prediction)
-        params_list = tools.get_params_list()
+        params_list = tools.get_params_list(dataset, self.seasonality)
         model = self.cross_validation(dataset[columns[1]], params_list)
         if self.precison == "low":
             predicted = model.forecast(prediction)
@@ -62,7 +62,6 @@ class Sarima:
             forecast = model.forecast(prediction)
             index = forecast.index
             predicted = tools.convert_to_exp(forecast)
-            print(predicted)
         return pd.DataFrame(index, predicted).to_json(orient='table')
 
     """
@@ -79,6 +78,7 @@ class Sarima:
         while iterable < len(params_list):
             queue = []
             for i in range(5):
+                print(iterable, i)
                 try:
                     t = Thread(target=self.seasonal_arima, args=(dataset, params_list[iterable + i] ))
                     queue.append(t)
