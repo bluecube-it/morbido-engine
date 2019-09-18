@@ -139,7 +139,6 @@ class Tools:
     def json_parse(self, start, string):
         new_json = []
         
-        #date = datetime.datetime(start)
         for el in json.loads(string)['data']:
             start += datetime.timedelta(days= 30)
             print(list(start.strftime('%Y-%m-%d'))[0])
