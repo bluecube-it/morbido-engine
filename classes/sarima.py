@@ -47,6 +47,11 @@ class Sarima:
     """
 
     def get_prediction(self, filename, columns, prediction):
+        print(columns)
+        try:
+            prediction = int(prediction)
+        except:
+            prediction = prediction
         tools = Tools()
         dataset = tools.get_dataset(filename, columns)
         string_seasonality = self.seasonality_to_string()
@@ -56,8 +61,11 @@ class Sarima:
             dataset = tools.montly_dataset(dataset, prediction)
             prediction = self.int_prediction(prediction)
         params_list = tools.get_params_list(dataset, self.seasonality)
-        model = self.cross_validation(dataset[columns[1]], params_list)
         index = dataset.index[-1:]
+        print(index)
+        model = self.cross_validation(dataset[columns[1]], params_list)
+        
+
         if self.precison == "low":
             predicted = model.forecast(prediction)
             ##index = predicted.index
@@ -125,6 +133,5 @@ class Sarima:
                     warnings.filterwarnings('ignore')
                     self.models.append(SARIMAX(dataset, order=(params[0], params[1], params[2]), trend='t', seasonal_order=(params[3], params[4], params[5], self.seasonality)).fit(disp=-1))
                 except:
-                    print('Errore parametri')
                     pass
 
