@@ -46,6 +46,7 @@ class Tools:
     """
 
     def convert_to_log(self, dataset, seasonality):
+        print(seasonality)
         return np.log1p(dataset).groupby(pd.Grouper(freq=seasonality)).mean()
 
     """
@@ -55,7 +56,10 @@ class Tools:
     """
 
     def montly_dataset(self, dataset, month):
-        return dataset[dataset.index.month == month]
+        months = ['gen', 'feb', 'mar', 'apr', 'mag', 'giu', 'lug', 'ago', 'set', 'ott', 'nov', 'dic']
+        index = months.index(month) + 1
+        print(index)
+        return dataset[dataset.index.month == index]
     
     """
     index_placeholder:
@@ -129,4 +133,3 @@ class Tools:
         else:
             d = range(1,2)
         return d,D
-
