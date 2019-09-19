@@ -1,6 +1,8 @@
 import numpy as np
 import pandas as pd
 from itertools import product
+from dateutil.relativedelta import relativedelta
+#from dateutil.relativedelta import *
 import json
 import datetime
 
@@ -135,12 +137,20 @@ class Tools:
         else:
             d = range(1,2)
         return d,D
+    """
+    json_parse:
+        start: DateTimeIndex, Index
+        string: str, str(json)
 
-    def json_parse(self, start, string):
+    return the final json of the prediction
+    """
+    def json_parse(self, start, string, seasonality):
         new_json = []
         
         for el in json.loads(string)['data']:
-            start += datetime.timedelta(days= 30)
-            print(list(start.strftime('%Y-%m-%d'))[0])
-            new_json += [{'data': list(start.strftime('%Y-%m-%d'))[0], 'value': el['0']}]
+            if seasonality == "M":
+                start = start + relativedelta(months=+1)
+            elif seasonality == "D":
+                start = start + relativedelta(days=+1)
+            new_json += [{'date': str(list(start)[0]), 'value': el['0']}]
         return {'data': new_json}

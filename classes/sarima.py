@@ -47,7 +47,6 @@ class Sarima:
     """
 
     def get_prediction(self, filename, columns, prediction):
-        print(columns)
         try:
             prediction = int(prediction)
         except:
@@ -61,20 +60,15 @@ class Sarima:
             dataset = tools.montly_dataset(dataset, prediction)
             prediction = self.int_prediction(prediction)
         params_list = tools.get_params_list(dataset, self.seasonality)
-        index = dataset.index[-1:]
+        index = pd.to_datetime(dataset.index[-1:]).date
         print(index)
         model = self.cross_validation(dataset[columns[1]], params_list)
-        
-
         if self.precison == "low":
-            predicted = model.forecast(prediction)
-            ##index = predicted.index
-            ##return pd.DataFrame().to_json(orient='table')
+            predicted = model.forecast(prediction)[column[1]]
         elif self.precison == "medium" or self.precison == "high":
             forecast = model.forecast(prediction)
-            #index = forecast.index
             predicted = pd.DataFrame(tools.convert_to_exp(forecast)).to_json(orient='table')
-        return tools.json_parse(index, predicted)
+        return tools.json_parse(index, predicted, string_seasonality)
 
     """
     cross_validation:
