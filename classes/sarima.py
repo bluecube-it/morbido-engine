@@ -61,13 +61,11 @@ class Sarima:
             dataset = tools.montly_dataset(dataset, prediction)
             prediction = self.int_prediction(prediction)
         params_list = tools.get_params_list(dataset, self.seasonality)
-        index = dataset.index[-1:]
+        index = pd.to_datetime(dataset.index[-1:]).date
         print(index)
         model = self.cross_validation(dataset[columns[1]], params_list)
-        
-
         if self.precison == "low":
-            predicted = model.forecast(prediction)
+            predicted = model.forecast(prediction)[column[1]]
             ##index = predicted.index
             ##return pd.DataFrame().to_json(orient='table')
         elif self.precison == "medium" or self.precison == "high":
