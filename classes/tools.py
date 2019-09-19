@@ -149,7 +149,7 @@ class Tools:
         
         for el in json.loads(string)['data']:
             if seasonality == "M":
-                start = start + relativedelta(months=+1)
+                start = start + relativedelta(months=+1, day=1)
             elif seasonality == "D":
                 start = start + relativedelta(days=+1)
             new_json += [{'date': str(list(start)[0]), 'value': el['0']}]
