@@ -24,7 +24,7 @@ class Prediction(Resource):
         #parser.add_argument('data')
         parser.add_argument('seasonality', type=int)        
         parser.add_argument('precision', type=str)
-        parser.add_argument('filename', type=str)
+        parser.add_argument('filename')
         parser.add_argument('index', type=str)
         parser.add_argument('input', type=str)
         parser.add_argument('prediction')
