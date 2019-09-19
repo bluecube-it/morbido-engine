@@ -1,15 +1,21 @@
 import numpy as np
+import json
+import datetime
 import pandas as pd
+from io import StringIO
 from itertools import product
 from dateutil.relativedelta import relativedelta
 #from dateutil.relativedelta import *
-import json
-import datetime
-
 class Tools:
 
+    """
+    get_columns:
+        filename: StreamData
+    """
+
     def get_columns(self, filename):
-        return list(pd.read_csv(filename).columns)
+        dataset = StringIO(filename)
+        return list(pd.read_csv(dataset).columns)
 
     """
     get_dataset:
@@ -21,10 +27,12 @@ class Tools:
 
     def get_dataset(self, filename, column):
         dateparser = lambda x: pd.datetime.strptime(x,'%Y-%m-%d %H:00')
-        return pd.read_csv(filename, usecols=[column[0],  column[1]], index_col=[column[0]], parse_dates=[column[0]],  date_parser=dateparser)
+        dataset = StringIO(filename)
+        return pd.read_csv(dataset, usecols=[column[0],  column[1]], index_col=[column[0]], parse_dates=[column[0]],  date_parser=dateparser)
 
     def shape(self, filename):
-        return pd.read_csv(filename).shape
+        dataset = StringIO(filename)
+        return pd.read_csv(dataset).shape
 
     """
     MAPE: 
