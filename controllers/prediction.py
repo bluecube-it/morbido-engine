@@ -30,7 +30,7 @@ class Prediction(Resource):
         parser.add_argument('prediction')
         args = parser.parse_args()
         #params = json.loads(args.data)
-        print(args)
+        
         forecasting = Sarima(args.seasonality, args.precision)
         
         return forecasting.get_prediction(args.filename, [args.index, args.input], args.prediction)

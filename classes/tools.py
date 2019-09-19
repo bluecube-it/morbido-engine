@@ -144,11 +144,13 @@ class Tools:
 
     return the final json of the prediction
     """
-    def json_parse(self, start, string):
+    def json_parse(self, start, string, seasonality):
         new_json = []
         
         for el in json.loads(string)['data']:
-            start = start + relativedelta(months=+1)
-            print(list(start)[0])#strftime('%Y-%m-%d'))[0])
+            if seasonality == "M":
+                start = start + relativedelta(months=+1)
+            elif seasonality == "D":
+                start = start + relativedelta(days=+1)
             new_json += [{'date': str(list(start)[0]), 'value': el['0']}]
         return {'data': new_json}
