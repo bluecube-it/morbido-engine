@@ -2,7 +2,7 @@ import numpy as np
 import json
 import datetime
 import pandas as pd
-from io import StringIO
+from io import StringIO, BytesIO
 from itertools import product
 from dateutil.relativedelta import relativedelta
 #from dateutil.relativedelta import *
@@ -14,8 +14,9 @@ class Tools:
     """
 
     def get_columns(self, filename):
-        dataset = StringIO(filename)
-        return list(pd.read_csv(dataset).columns)
+        dataset = BytesIO(filename)
+        return list(pd.read_csv(dataset, engine='python').columns)
+
 
     """
     get_dataset:
@@ -27,12 +28,12 @@ class Tools:
 
     def get_dataset(self, filename, column):
         dateparser = lambda x: pd.datetime.strptime(x,'%Y-%m-%d %H:00')
-        dataset = StringIO(filename)
-        return pd.read_csv(dataset, usecols=[column[0],  column[1]], index_col=[column[0]], parse_dates=[column[0]],  date_parser=dateparser)
+        dataset = BytesIO(filename)
+        return pd.read_csv(dataset, usecols=[column[0],  column[1]], index_col=[column[0]], parse_dates=[column[0]],  date_parser=dateparser, engine='python')
 
     def shape(self, filename):
-        dataset = StringIO(filename)
-        return pd.read_csv(dataset).shape
+        dataset = BytesIO(filename)
+        return pd.read_csv(dataset, engine='python').shape
 
     """
     MAPE: 
