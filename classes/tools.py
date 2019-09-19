@@ -50,7 +50,6 @@ class Tools:
     """
 
     def convert_to_log(self, dataset, seasonality):
-        print(seasonality)
         return np.log1p(dataset).groupby(pd.Grouper(freq=seasonality)).mean()
 
     """

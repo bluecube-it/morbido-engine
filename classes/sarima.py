@@ -20,7 +20,7 @@ class Sarima:
 
     def seasonality_to_string(self):
         print(type(self.seasonality))
-        if self.seasonality == 30 or self.seasonality == 31:
+        if self.seasonality == 30 or self.seasonality == 31 or self.seasonality == 28 or self.seasonality == 29:
             return "D"
         elif self.seasonality == 7:
             return "W"
@@ -47,14 +47,14 @@ class Sarima:
     """
 
     def get_prediction(self, filename, columns, prediction):
-        try:
-            prediction = int(prediction)
-        except:
-            prediction = prediction
+        ##try:
+        ##    prediction = int(prediction)
+        ##except:
+        ##    prediction = prediction
         tools = Tools()
         dataset = tools.get_dataset(filename, columns)
         string_seasonality = self.seasonality_to_string()
-        if self.precison == "high" or self.precison == "medium":
+        if self.precison == "high":
             dataset = tools.convert_to_log(dataset, string_seasonality)
         if (string_seasonality == "D") and type(prediction) == type("string"):
             dataset = tools.montly_dataset(dataset, prediction)
@@ -65,7 +65,7 @@ class Sarima:
         model = self.cross_validation(dataset[columns[1]], params_list)
         if self.precison == "low":
             predicted = model.forecast(prediction)[column[1]]
-        elif self.precison == "medium" or self.precison == "high":
+        elif self.precison == "high":
             forecast = model.forecast(prediction)
             predicted = pd.DataFrame(tools.convert_to_exp(forecast)).to_json(orient='table')
         return tools.json_parse(index, predicted, string_seasonality)
@@ -121,11 +121,11 @@ class Sarima:
         params: tuple (p, d, q, P, D, Q)
     """
     def seasonal_arima(self, dataset, params):
-         if self.precison == "low" or self.precison == "medium":   
-            if sum(params) < 7:
-                try:
-                    warnings.filterwarnings('ignore')
-                    self.models.append(SARIMAX(dataset, order=(params[0], params[1], params[2]), trend='t', seasonal_order=(params[3], params[4], params[5], self.seasonality)).fit(disp=-1))
-                except:
-                    pass
+        #if self.precison == "low" or self.precison == "medium":   
+        if sum(params) < 7:
+            try:
+                warnings.filterwarnings('ignore')
+                self.models.append(SARIMAX(dataset, order=(params[0], params[1], params[2]), trend='t', seasonal_order=(params[3], params[4], params[5], self.seasonality)).fit(disp=-1))
+            except:
+                pass
 
