@@ -14,7 +14,7 @@ class Tools:
     """
 
     def get_columns(self, filename):
-        dataset = BytesIO(filename)
+        dataset = StringIO(filename)
         return list(pd.read_csv(dataset, engine='python').columns)
 
 
@@ -28,11 +28,11 @@ class Tools:
 
     def get_dataset(self, filename, column):
         dateparser = lambda x: pd.datetime.strptime(x,'%Y-%m-%d %H:00')
-        dataset = BytesIO(filename)
+        dataset = StringIO(filename)
         return pd.read_csv(dataset, usecols=[column[0],  column[1]], index_col=[column[0]], parse_dates=[column[0]],  date_parser=dateparser, engine='python')
 
     def shape(self, filename):
-        dataset = BytesIO(filename)
+        dataset = StringIO(filename)
         return pd.read_csv(dataset, engine='python').shape
 
     """
