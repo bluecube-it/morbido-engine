@@ -22,15 +22,20 @@ class Prediction(Resource):
         #params = request.form['data
         parser = reqparse.RequestParser()
         #parser.add_argument('data')
-        parser.add_argument('seasonality', type=int)        
+        parser.add_argument('seasonality', type=str)        
         parser.add_argument('precision', type=str)
         parser.add_argument('filename')
         parser.add_argument('index', type=str)
         parser.add_argument('input', type=str)
-        parser.add_argument('prediction')
+        parser.add_argument('prediction', type=int)
         args = parser.parse_args()
         #params = json.loads(args.data)
         
+        if args.seasonality == "yearly":
+            args.prediction = args.prediction*12
+
+        args.seasonality = 12
+
         forecasting = Sarima(args.seasonality, args.precision)
         
         return forecasting.get_prediction(args.filename, [args.index, args.input], args.prediction)
