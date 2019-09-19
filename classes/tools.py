@@ -8,6 +8,9 @@ import datetime
 
 class Tools:
 
+    def get_columns(self, filename):
+        return list(pd.read_csv(filename).columns)
+
     """
     get_dataset:
         filename: string
