@@ -6,6 +6,7 @@ from io import StringIO, BytesIO
 from itertools import product
 from dateutil.relativedelta import relativedelta
 from dateutil.parser import parse
+#from flask.ext.restful import abort
 #from dateutil.relativedelta import *
 class Tools:
 
@@ -28,9 +29,12 @@ class Tools:
     """
 
     def get_dataset(self, filename, column):
-        dateparser = lambda x: parse(x)#pd.datetime.strptime(x,'%Y-%m-%d %H:00')
-        dataset = StringIO(filename)
-        return pd.read_csv(dataset, usecols=[column[0],  column[1]], index_col=[column[0]], parse_dates=[column[0]],  date_parser=dateparser, engine='python')
+        try:
+            dateparser = lambda x: parse(x)#pd.datetime.strptime(x,'%Y-%m-%d %H:00')
+            dataset = StringIO(filename)
+            return pd.read_csv(dataset, usecols=[column[0],  column[1]], index_col=[column[0]], parse_dates=[column[0]],  date_parser=dateparser, engine='python')
+        except:
+            raise ValueError('invalid fields')
 
     def shape(self, filename):
         dataset = StringIO(filename)
@@ -74,7 +78,7 @@ class Tools:
     def montly_dataset(self, dataset, month):
         months = ['gen', 'feb', 'mar', 'apr', 'mag', 'giu', 'lug', 'ago', 'set', 'ott', 'nov', 'dic']
         index = months.index(month) + 1
-        print(index)
+        #print(index)
         return dataset[dataset.index.month == index]
     
     """
