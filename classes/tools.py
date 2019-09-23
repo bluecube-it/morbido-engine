@@ -16,9 +16,11 @@ class Tools:
     """
 
     def get_columns(self, filename):
-        dataset = StringIO(filename)
-        return list(pd.read_csv(dataset, engine='python').columns)
-
+        try:
+            dataset = StringIO(filename)
+            return list(pd.read_csv(dataset, engine='python').columns)
+        except:
+            abort(500, {'error': 'invalid file'})
 
     """
     get_dataset:

@@ -19,9 +19,7 @@ class Prediction(Resource):
             - string (month) "todo"
     """
     def post(self):
-        #params = request.form['data
         parser = reqparse.RequestParser()
-        #parser.add_argument('data')
         parser.add_argument('seasonality', type=str, required=True, help='missing seasonality')        
         parser.add_argument('precision', type=str, required=True, help='missing precision')
         parser.add_argument('filename', required=True, help='missing filename')
@@ -29,7 +27,6 @@ class Prediction(Resource):
         parser.add_argument('input', type=str, required=True, help='missing input')
         parser.add_argument('prediction', type=int, required=True, help='missing precision')
         args = parser.parse_args()
-        #params = json.loads(args.data)
         
         if args.seasonality == "yearly":
             args.prediction = args.prediction*12

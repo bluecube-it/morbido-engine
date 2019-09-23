@@ -2,6 +2,7 @@ import torch
 import pandas as pd
 import numpy as np
 from .tools import Tools
+import json
 
 class LNN:
     def __init__(self, seasonality):
@@ -37,7 +38,23 @@ class LNN:
 
             self.backpropagation(lossing)
 
-        return y
+        return y, loss
+
+    def cross_validation(self, X, Y):
+        best_error = float('inf')
+        wheights = {}
+        for i in range(5):
+            y, loss = self.train(X, Y)
+            error = self.percentage_error(Y, y)
+
+            if loss < best_error:
+                best_error = error
+                wheights = {'w1': self.w1, 'w2': self.w2, 'error': error}
+
+        self.w1 = wheights['w1']
+        self.w2 = wheights['w2']
+
+        return wheights['error']
 
     def predict(self, dataset, columns):
         helper = Tools()
@@ -48,11 +65,13 @@ class LNN:
         x = dataset[columns[1]][:-self.seasonality]
         y = dataset[columns[1]][-test_time:]
         p = dataset[columns[1]][-self.seasonality:]
+        start = dataset.index[-1:]
         X = torch.FloatTensor(helper.seasonality_generate(x, self.seasonality))
         Y = torch.FloatTensor(helper.seasonality_generate(y, self.seasonality))
         P = torch.FloatTensor(helper.seasonality_generate(p, self.seasonality))
-        self.train(X, Y)
-        return torch.exp(self.forward(P))
+        error = self.cross_validation(X, Y)
+        prevision = json.dumps(torch.exp(self.forward(P)).tolist()[0])
+        return helpser.json_parse(start, prevision, 'M')
 
     
 
