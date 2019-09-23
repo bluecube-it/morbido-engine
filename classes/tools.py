@@ -34,7 +34,6 @@ class Tools:
         try:
             dateparser = lambda x: parse(x)#pd.datetime.strptime(x,'%Y-%m-%d %H:00')
             dataset = StringIO(filename)
-            dataset = filename
             return pd.read_csv(dataset, usecols=[column[0],  column[1]], index_col=[column[0]], parse_dates=[column[0]],  date_parser=dateparser, engine='python')
         except:
             abort(500, {'error': 'invalid fields'})
@@ -177,6 +176,14 @@ class Tools:
     seasonality_to_string:
         - seasonality: int
     """
+
+    def neural_json_parse(self, start, array, seasonality='M'):
+        new_json = []
+        start = pd.to_datetime(start).date
+        for el in array:
+            start = start + relativedelta(months=+1, day=1)
+            new_json += [{'date': str(list(start)[0]), 'value': el}] 
+        return {'data': new_json}
 
     def seasonality_to_string(self, seasonality):
         #print(type(self.seasonality))
