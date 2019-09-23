@@ -6,9 +6,8 @@ parser = reqparse.RequestParser()
 class Shape(Resource):
     def post(self):
         # Params
-        parser.add_argument('dataset')
+        parser.add_argument('dataset', required=True, help='dataset required')
         args = parser.parse_args()
-
         # Init tools
         tool = Tools()
         shape = tool.shape(args.dataset)
