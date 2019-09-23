@@ -32,10 +32,9 @@ class Tools:
         try:
             dateparser = lambda x: parse(x)#pd.datetime.strptime(x,'%Y-%m-%d %H:00')
             dataset = StringIO(filename)
+            dataset = filename
             return pd.read_csv(dataset, usecols=[column[0],  column[1]], index_col=[column[0]], parse_dates=[column[0]],  date_parser=dateparser, engine='python')
         except:
-            #raise ValueError({'error': 'invalid fields'})
-            #raise {'error': 'invalid fields'}
             abort(500, {'error': 'invalid fields'})
 
     def shape(self, filename):
@@ -80,7 +79,6 @@ class Tools:
     def montly_dataset(self, dataset, month):
         months = ['gen', 'feb', 'mar', 'apr', 'mag', 'giu', 'lug', 'ago', 'set', 'ott', 'nov', 'dic']
         index = months.index(month) + 1
-        #print(index)
         return dataset[dataset.index.month == index]
     
     """
@@ -172,3 +170,34 @@ class Tools:
                 start = start + relativedelta(days=+1)
             new_json += [{'date': str(list(start)[0]), 'value': el['0']}]
         return {'data': new_json}
+
+    """
+    seasonality_to_string:
+        - seasonality: int
+    """
+
+    def seasonality_to_string(self, seasonality):
+        #print(type(self.seasonality))
+        if seasonality == 30 or seasonality == 31 or seasonality == 28 or seasonality == 29:
+            return "D"
+        elif seasonality == 7:
+            return "W"
+        elif seasonality == 12:
+            return "M"
+        else:
+            abort(500, {'error': 'invalid seasonlaity'})
+
+    def seasonality_generate(self, values, seasonality):
+        tmp = []
+        result = []
+        j = 0
+        for i in range(len(values)):
+            j += 1
+            if j == seasonality:
+                tmp += [values[i]]
+                result +=[tmp]
+                tmp = []
+                j = 0
+            else:
+                tmp += [values[i]]
+        return result
