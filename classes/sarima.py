@@ -5,6 +5,7 @@ from threading import Thread
 from itertools import product
 from .tools import Tools
 from statsmodels.tsa.statespace.sarimax import SARIMAX
+from flask import abort
 
 class Sarima:
     """
@@ -98,8 +99,8 @@ class Sarima:
             iterable += 5
 
         if len(self.models) == 0:
-            raise ValueError('No forescasts available for this period')
-        
+            abort(500, {'error': 'No forecasts available for this choice'})
+
         for model in self.models:
             try:
                 aic = model.aic

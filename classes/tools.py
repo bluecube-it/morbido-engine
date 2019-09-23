@@ -6,7 +6,7 @@ from io import StringIO, BytesIO
 from itertools import product
 from dateutil.relativedelta import relativedelta
 from dateutil.parser import parse
-#from flask.ext.restful import abort
+from flask import abort
 #from dateutil.relativedelta import *
 class Tools:
 
@@ -34,7 +34,9 @@ class Tools:
             dataset = StringIO(filename)
             return pd.read_csv(dataset, usecols=[column[0],  column[1]], index_col=[column[0]], parse_dates=[column[0]],  date_parser=dateparser, engine='python')
         except:
-            raise ValueError('invalid fields')
+            #raise ValueError({'error': 'invalid fields'})
+            #raise {'error': 'invalid fields'}
+            abort(500, {'error': 'invalid fields'})
 
     def shape(self, filename):
         dataset = StringIO(filename)
