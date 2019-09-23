@@ -24,3 +24,7 @@ class Neural(Resource):
         neural = LNN(args.seasonality)
         prediction = neural.predict(arg.filename, [arg.index, args.input])
         return prediction
+        """
+        neural = LNN(12)
+        return neural.predict('dataset_finale.csv', ['date', 'values'])
+        """

@@ -2,6 +2,7 @@ import torch
 import pandas as pd
 import numpy as np
 from .tools import Tools
+from threading import Thread
 import json
 
 class LNN:
@@ -12,7 +13,7 @@ class LNN:
         self.w1 = torch.randn(seasonality, 100, dtype=dtype, device=device, requires_grad=True)
         self.w2 = torch.randn(100, seasonality, dtype=dtype, device=device, requires_grad=True)
         self.learning_rate = 1e-4
-
+       
     def forward(self, X):
         return torch.sigmoid(X.mm(self.w1)).mm(self.w2)
 
@@ -27,7 +28,7 @@ class LNN:
             self.w1.grad.zero_()
             self.w2.grad.zero_()
     
-    def percentage_error(self, actual, predict):
+    def percentage_error(self, Y, y):
         return ((y - Y)/Y).sum().item() *100
 
     def train(self, X, Y):
@@ -38,16 +39,18 @@ class LNN:
 
             self.backpropagation(lossing)
 
-        return y, loss
+        return y
+        #self.tmp.append({'w1': self.w1, 'w2': self.w2, 'y': y})
 
     def cross_validation(self, X, Y):
         best_error = float('inf')
         wheights = {}
         for i in range(5):
-            y, loss = self.train(X, Y)
+            y = self.train(X, Y)
+            
             error = self.percentage_error(Y, y)
 
-            if loss < best_error:
+            if error < best_error:
                 best_error = error
                 wheights = {'w1': self.w1, 'w2': self.w2, 'error': error}
 
@@ -70,8 +73,8 @@ class LNN:
         Y = torch.FloatTensor(helper.seasonality_generate(y, self.seasonality))
         P = torch.FloatTensor(helper.seasonality_generate(p, self.seasonality))
         error = self.cross_validation(X, Y)
-        prevision = json.dumps(torch.exp(self.forward(P)).tolist()[0])
-        return helpser.json_parse(start, prevision, 'M')
+        prevision = torch.exp(self.forward(P)).tolist()[0]
+        return helper.neural_json_parse(start, prevision, 'M')
 
     
 
