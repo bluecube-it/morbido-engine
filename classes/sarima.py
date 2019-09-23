@@ -19,17 +19,7 @@ class Sarima:
         self.precison = precision
         self.models = []
 
-    def seasonality_to_string(self):
-        #print(type(self.seasonality))
-        if self.seasonality == 30 or self.seasonality == 31 or self.seasonality == 28 or self.seasonality == 29:
-            return "D"
-        elif self.seasonality == 7:
-            return "W"
-        elif self.seasonality == 12:
-            return "M"
-        else:
-            return "NONE"
-
+    
     def int_prediction(self, prediction):
         if prediction == 'gen' or prediction == 'mar' or prediction == 'mag' or prediction == 'lug' or prediction == 'ago' or prediction == 'ott' or prediction == 'dic':
             return 31
@@ -54,7 +44,7 @@ class Sarima:
         ##    prediction = prediction
         tools = Tools()
         dataset = tools.get_dataset(filename, columns)
-        string_seasonality = self.seasonality_to_string()
+        string_seasonality = tools.seasonality_to_string(self.seasonality)
         if self.precison == "high":
             dataset = tools.convert_to_log(dataset, string_seasonality)
         if (string_seasonality == "D") and type(prediction) == type("string"):
