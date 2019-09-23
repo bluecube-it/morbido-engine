@@ -19,7 +19,7 @@ class Sarima:
         self.models = []
 
     def seasonality_to_string(self):
-        print(type(self.seasonality))
+        #print(type(self.seasonality))
         if self.seasonality == 30 or self.seasonality == 31 or self.seasonality == 28 or self.seasonality == 29:
             return "D"
         elif self.seasonality == 7:
@@ -61,7 +61,7 @@ class Sarima:
             prediction = self.int_prediction(prediction)
         params_list = tools.get_params_list(dataset, self.seasonality)
         index = pd.to_datetime(dataset.index[-1:]).date
-        print(index)
+        #print(index)
         model = self.cross_validation(dataset[columns[1]], params_list)
         if self.precison == "low":
             predicted = model.forecast(prediction)[column[1]]
@@ -84,7 +84,7 @@ class Sarima:
         while iterable < len(params_list):
             queue = []
             for i in range(5):
-                print(iterable, i)
+                #print(iterable, i)
                 try:
                     t = Thread(target=self.seasonal_arima, args=(dataset, params_list[iterable + i] ))
                     queue.append(t)
@@ -97,6 +97,9 @@ class Sarima:
 
             iterable += 5
 
+        if len(self.models) == 0:
+            raise ValueError('No forescasts available for this period')
+        
         for model in self.models:
             try:
                 aic = model.aic
