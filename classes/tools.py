@@ -32,7 +32,7 @@ class Tools:
 
     def get_dataset(self, filename, column):
         try:
-            dateparser = lambda x: parse(x)#pd.datetime.strptime(x,'%Y-%m-%d %H:00')
+            dateparser = lambda x: parse(x)
             dataset = StringIO(filename)
             return pd.read_csv(dataset, usecols=[column[0],  column[1]], index_col=[column[0]], parse_dates=[column[0]],  date_parser=dateparser, engine='python')
         except:

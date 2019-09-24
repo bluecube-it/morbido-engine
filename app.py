@@ -4,6 +4,7 @@ from controllers.shape import Shape
 from controllers.tried import Tried
 from controllers.columns import Columns
 from controllers.prediction import Prediction
+from controllers.dataset import Dataset
 #from controllers.neural import Neural
 
 app = Flask(__name__)
@@ -12,6 +13,7 @@ api = Api(app)
 api.add_resource(Tried, '/example/<string:word>')
 api.add_resource(Shape, '/dataset/shape')
 api.add_resource(Columns, '/dataset/columns')
+api.add_resource(Dataset, '/dataset/json')
 api.add_resource(Prediction, '/forecasts/sarima')
 #api.add_resource(Neural, '/forecasts/neural')
 
