@@ -194,7 +194,7 @@ class Tools:
         elif seasonality == 12:
             return "M"
         else:
-            abort(500, {'error': 'invalid seasonlaity'})
+            abort(500, {'error': 'invalid seasonality'})
 
     def seasonality_generate(self, values, seasonality):
         tmp = []
