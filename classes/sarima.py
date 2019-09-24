@@ -50,7 +50,7 @@ class Sarima:
         if (string_seasonality == "D") and type(prediction) == type("string"):
             dataset = tools.montly_dataset(dataset, prediction)
             prediction = self.int_prediction(prediction)
-        params_list = tools.get_params_list(dataset, self.seasonality)
+        params_list = tools.get_params_list(dataset, self.seasonality, columns[1])
         index = pd.to_datetime(dataset.index[-1:]).date
         #print(index)
         model = self.cross_validation(dataset[columns[1]], params_list)
