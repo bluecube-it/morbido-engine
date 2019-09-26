@@ -6,6 +6,7 @@ from itertools import product
 from .tools import Tools
 from statsmodels.tsa.statespace.sarimax import SARIMAX
 from flask import abort
+#import joblib as jb
 
 class Sarima:
     """
@@ -52,7 +53,7 @@ class Sarima:
             prediction = self.int_prediction(prediction)
         params_list = tools.get_params_list(dataset, self.seasonality, columns[1])
         index = pd.to_datetime(dataset.index[-1:]).date
-        #print(index)
+        print(index)
         model = self.cross_validation(dataset[columns[1]], params_list)
         if self.precison == "low":
             predicted = model.forecast(prediction)[column[1]]
@@ -99,6 +100,7 @@ class Sarima:
                     best_model = model
             except:
                 continue
+        #jb.dump(best_model, 'model.pkl')
         return best_model
 
     def period(self):
