@@ -7,9 +7,21 @@ from itertools import product
 from dateutil.relativedelta import relativedelta
 from dateutil.parser import parse
 from flask import abort
+import csv
 #from dateutil.relativedelta import *
 class Tools:
+    """
+    json_dataset:
+        - filename: StreamData
+    """
 
+    def json_dataset(self, filename):
+        try:
+            dataset = StringIO(filename)
+            data = pd.read_csv(dataset).to_json(orient='records')
+            return json.loads(data)
+        except:
+            abort(500, {'error': 'invalid file'})
     """
     get_columns:
         filename: StreamData
@@ -33,7 +45,8 @@ class Tools:
     def get_dataset(self, filename, column):
         try:
             dateparser = lambda x: parse(x)
-            dataset = StringIO(filename)
+            #dataset = StringIO(filename)
+            dataset = filename
             return pd.read_csv(dataset, usecols=[column[0],  column[1]], index_col=[column[0]], parse_dates=[column[0]],  date_parser=dateparser, engine='python')
         except:
             abort(500, {'error': 'invalid fields'})
@@ -163,8 +176,8 @@ class Tools:
     """
     def json_parse(self, start, string, seasonality):
         new_json = []
-        
         for el in json.loads(string)['data']:
+           
             if seasonality == "M":
                 start = start + relativedelta(months=+1, day=1)
             elif seasonality == "D":

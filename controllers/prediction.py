@@ -37,6 +37,6 @@ class Prediction(Resource):
         
         return forecasting.get_prediction(args.filename, [args.index, args.input], args.prediction)
         """
-        prova = Sarima(12, 'medium')
-        return json.loads(prova.get_prediction('dataset_finale.csv', ['date', 'values, 12))
+        prova = Sarima(12, 'high')
+        return json.loads(prova.get_prediction('dataset_finale.csv', ['date', 'values'], 12))
         """
