@@ -45,8 +45,7 @@ class Tools:
     def get_dataset(self, filename, column):
         try:
             dateparser = lambda x: parse(x)
-            #dataset = StringIO(filename)
-            dataset = filename
+            dataset = StringIO(filename)
             return pd.read_csv(dataset, usecols=[column[0],  column[1]], index_col=[column[0]], parse_dates=[column[0]],  date_parser=dateparser, engine='python')
         except:
             abort(500, {'error': 'invalid fields'})
