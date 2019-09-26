@@ -23,3 +23,8 @@ per aggiornare le dipendenze:
 ```bash
 pip3 freeze > requirements.txt
 ```
+
+per eseguire i test:
+```bash
+python3 -m unittest discover test/
+```

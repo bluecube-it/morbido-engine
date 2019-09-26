@@ -7,4 +7,4 @@ class Columns(Resource):
         parser.add_argument('dataset')
         args = parser.parse_args()
         tools = Tools()
-        return {'columns': tools.get_columns(args.dataset)}
+        return {'columns': tools.get_columns(args.dataset), 'dataset': tools.json_dataset(args.dataset)}
