@@ -44,6 +44,7 @@ class Sarima:
         ##except:
         ##    prediction = prediction
         tools = Tools()
+        graph = tools.json_dataset(filename, columns)
         dataset = tools.get_dataset(filename, columns)
         string_seasonality = tools.seasonality_to_string(self.seasonality)
         if self.precison == "high":
@@ -60,7 +61,7 @@ class Sarima:
         elif self.precison == "high":
             forecast = model.forecast(prediction)
             predicted = pd.DataFrame(tools.convert_to_exp(forecast)).to_json(orient='table')
-        return {'data': tools.json_parse(index, predicted, string_seasonality), 'dataset': tools.json_dataset(filename, columns)}
+        return {'data': tools.json_parse(index, predicted, string_seasonality), 'dataset': graph}
 
     """
     cross_validation:

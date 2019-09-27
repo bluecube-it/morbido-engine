@@ -18,20 +18,15 @@ class Tools:
     def json_dataset(self, filename, columns):
         try:
             raw_data = self.get_dataset(filename, columns)
-
             # data = raw_data.groupby(pd.Grouper(freq='M')).mean()
-            data = self.convert_to_log(filename, 'M')
+            data = self.convert_to_log(raw_data, 'M')
 
-            
             start = pd.to_datetime(raw_data.index[1:]).date
-            data = self.convert_to_exp(data[columns[1]]);
+            data = self.convert_to_exp(data[columns[1]])
             response = []
             for el in data:
-
                 response += [{'date': str(list(start)[0]), 'values': el}]
                 start = start + relativedelta(months=+1, day=1)
-
-            
             return response
         except:
            abort(500, {'error': 'invalid file'})
