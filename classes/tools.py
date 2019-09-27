@@ -19,14 +19,18 @@ class Tools:
         try:
             raw_data = self.get_dataset(filename, columns)
 
-            data = raw_data.groupby(pd.Grouper(freq='M')).mean()
-            
-            start = pd.to_datetime(raw_data.index[-1:]).date
-            response = []
-            for el in data[columns[1]]:
+            # data = raw_data.groupby(pd.Grouper(freq='M')).mean()
+            data = self.convert_to_log(filename, 'M')
 
-                start = start + relativedelta(months=+1, day=1)
+            
+            start = pd.to_datetime(raw_data.index[1:]).date
+            data = self.convert_to_exp(data[columns[1]]);
+            response = []
+            for el in data:
+
                 response += [{'date': str(list(start)[0]), 'values': el}]
+                start = start + relativedelta(months=+1, day=1)
+
             
             return response
         except:
