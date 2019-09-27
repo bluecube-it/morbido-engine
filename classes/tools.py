@@ -15,13 +15,22 @@ class Tools:
         - filename: StreamData
     """
 
-    def json_dataset(self, filename):
+    def json_dataset(self, filename, columns):
         try:
-            dataset = StringIO(filename)
-            data = pd.read_csv(dataset).to_json(orient='records')
-            return json.loads(data)
+            raw_data = self.get_dataset(filename, columns)
+
+            data = raw_data.groupby(pd.Grouper(freq='M')).mean()
+            
+            start = pd.to_datetime(raw_data.index[-1:]).date
+            response = []
+            for el in data[columns[1]]:
+
+                start = start + relativedelta(months=+1, day=1)
+                response += [{'date': str(list(start)[0]), 'values': el}]
+            
+            return response
         except:
-            abort(500, {'error': 'invalid file'})
+           abort(500, {'error': 'invalid file'})
     """
     get_columns:
         filename: StreamData
@@ -43,12 +52,12 @@ class Tools:
     """
 
     def get_dataset(self, filename, column):
-        try:
-            dateparser = lambda x: parse(x)
-            dataset = StringIO(filename)
-            return pd.read_csv(dataset, usecols=[column[0],  column[1]], index_col=[column[0]], parse_dates=[column[0]],  date_parser=dateparser, engine='python')
-        except:
-            abort(500, {'error': 'invalid fields'})
+       # try:
+        dateparser = lambda x: parse(x)
+        dataset = StringIO(filename)
+        return pd.read_csv(dataset, usecols=[column[0],  column[1]], index_col=[column[0]], parse_dates=[column[0]],  date_parser=dateparser, engine='python')
+       # except:
+       #     abort(500, {'error': 'invalid fields'})
 
     def shape(self, filename):
         dataset = StringIO(filename)
@@ -182,8 +191,7 @@ class Tools:
             elif seasonality == "D":
                 start = start + relativedelta(days=+1)
             new_json += [{'date': str(list(start)[0]), 'value': el['0']}]
-        return {'data': new_json}
-
+        return new_json
     """
     seasonality_to_string:
         - seasonality: int
@@ -194,7 +202,7 @@ class Tools:
         start = pd.to_datetime(start).date
         for el in array:
             start = start + relativedelta(months=+1, day=1)
-            new_json += [{'date': str(list(start)[0]), 'value': el}] 
+            new_json += [{'date': str(list(start)[0]), 'value': el}]
         return {'data': new_json}
 
     def seasonality_to_string(self, seasonality):

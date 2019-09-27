@@ -53,14 +53,14 @@ class Sarima:
             prediction = self.int_prediction(prediction)
         params_list = tools.get_params_list(dataset, self.seasonality, columns[1])
         index = pd.to_datetime(dataset.index[-1:]).date
-        print(index)
+
         model = self.cross_validation(dataset[columns[1]], params_list)
         if self.precison == "low":
             predicted = model.forecast(prediction)[column[1]]
         elif self.precison == "high":
             forecast = model.forecast(prediction)
             predicted = pd.DataFrame(tools.convert_to_exp(forecast)).to_json(orient='table')
-        return tools.json_parse(index, predicted, string_seasonality)
+        return {'data': tools.json_parse(index, predicted, string_seasonality), 'dataset': tools.json_dataset(filename, columns)}
 
     """
     cross_validation:
