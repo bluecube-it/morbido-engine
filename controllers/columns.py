@@ -4,7 +4,8 @@ from classes.tools import Tools
 class Columns(Resource):
     def post(self):
         parser = reqparse.RequestParser()
-        parser.add_argument('dataset')
+        parser.add_argument('dataset', required=True)
         args = parser.parse_args()
         tools = Tools()
-        return {'columns': tools.get_columns(args.dataset), 'dataset': tools.json_dataset(args.dataset)}
+        #dataset = 'dataset_finale.csv'
+        return {'columns': tools.get_columns(args.dataset)}
