@@ -4,8 +4,7 @@ from controllers.shape import Shape
 from controllers.tried import Tried
 from controllers.columns import Columns
 from controllers.prediction import Prediction
-#from controllers.chart import Chart
-#from controllers.neural import Neural 
+# from controllers.neural import Neural
 
 app = Flask(__name__)
 api = Api(app)
