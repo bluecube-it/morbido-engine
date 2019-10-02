@@ -6,6 +6,7 @@ from itertools import product
 from .tools import Tools
 from statsmodels.tsa.statespace.sarimax import SARIMAX
 from flask import abort
+import gc
 #import joblib as jb
 
 class Sarima:
@@ -19,7 +20,7 @@ class Sarima:
         self.seasonality = seasonality
         self.precison = precision
         self.models = []
-
+        gc.enable()
     
     def int_prediction(self, prediction):
         if prediction in ['gen', 'mar', 'mag', 'lug', 'ago', 'ott', 'dic']:
@@ -61,6 +62,8 @@ class Sarima:
         elif self.precison == "high":
             forecast = model.forecast(prediction)
             predicted = pd.DataFrame(tools.convert_to_exp(forecast)).to_json(orient='table')
+
+        gc.collect()
         return {'data': tools.json_parse(index, predicted, string_seasonality), 'dataset': graph}
 
     """
