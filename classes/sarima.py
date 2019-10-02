@@ -108,7 +108,7 @@ class Sarima:
         return best_model
 
     def period(self):
-        if self.seasonality == 31 or self.seasonality == 30 or self.seasonality == 29 or self.seasonality == 28:
+        if self.seasonality in [31,30,29,28]:
             return 1
         elif self.seasonality == 12:
             return 30
