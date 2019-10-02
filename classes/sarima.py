@@ -61,6 +61,7 @@ class Sarima:
             predicted = model.forecast(prediction)[columns[1]]
         elif self.precison == "high":
             forecast = model.forecast(prediction)
+            print(forecast)
             predicted = pd.DataFrame(tools.convert_to_exp(forecast)).to_json(orient='table')
 
         gc.collect()
