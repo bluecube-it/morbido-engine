@@ -57,7 +57,7 @@ class Sarima:
 
         model = self.cross_validation(dataset[columns[1]], params_list)
         if self.precison == "low":
-            predicted = model.forecast(prediction)[column[1]]
+            predicted = model.forecast(prediction)[columns[1]]
         elif self.precison == "high":
             forecast = model.forecast(prediction)
             predicted = pd.DataFrame(tools.convert_to_exp(forecast)).to_json(orient='table')
