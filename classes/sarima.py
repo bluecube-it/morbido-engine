@@ -22,11 +22,11 @@ class Sarima:
 
     
     def int_prediction(self, prediction):
-        if prediction == 'gen' or prediction == 'mar' or prediction == 'mag' or prediction == 'lug' or prediction == 'ago' or prediction == 'ott' or prediction == 'dic':
+        if prediction in ['gen', 'mar', 'mag', 'lug', 'ago', 'ott', 'dic']:
             return 31
         elif prediction == 'feb':
             return 28
-        elif prediction == 'apr' or prediction == 'giu' or prediction == 'set' or prediction == 'nov':
+        elif prediction in ['apr','giu','set','nov']:
             return 30
 
     """
@@ -49,7 +49,7 @@ class Sarima:
         string_seasonality = tools.seasonality_to_string(self.seasonality)
         if self.precison == "high":
             dataset = tools.convert_to_log(dataset, string_seasonality)
-        if (string_seasonality == "D") and type(prediction) == type("string"):
+        if (string_seasonality == "D") and isinstance(prediction, str):
             dataset = tools.montly_dataset(dataset, prediction)
             prediction = self.int_prediction(prediction)
         params_list = tools.get_params_list(dataset, self.seasonality, columns[1])
