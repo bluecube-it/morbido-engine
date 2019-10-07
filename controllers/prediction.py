@@ -19,7 +19,7 @@ class Prediction(Resource):
             - string (month) "todo"
     """
     def post(self):
-        """
+        
         parser = reqparse.RequestParser()
         parser.add_argument('seasonality', type=str, required=True, help='missing seasonality')        
         parser.add_argument('precision', type=str, required=True, help='missing precision')
@@ -43,3 +43,4 @@ class Prediction(Resource):
         """
         prova = Sarima(12, 'high')
         return prova.get_prediction('dataset_finale.csv', ['date', 'values'], 12)
+        """
