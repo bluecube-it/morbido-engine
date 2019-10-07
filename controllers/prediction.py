@@ -31,13 +31,16 @@ class Prediction(Resource):
         
         if args.seasonality == "yearly":
             args.prediction = args.prediction*12
-
-        args.seasonality = 12
+        if args.seasonality == "quarterly":
+            args.seasonality = 4
+        else:
+            args.seasonality = 12
+        
         
         forecasting = Sarima(args.seasonality, args.precision)
         
         return forecasting.get_prediction(args.filename, [args.index, args.input], args.prediction)
         """
         prova = Sarima(12, 'high')
-        return prova.get_prediction('bitcoin_csv.csv', ['date', 'price(USD)'], 12)
+        return prova.get_prediction('dataset_finale.csv', ['date', 'values'], 12)
         """

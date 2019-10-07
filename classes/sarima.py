@@ -45,7 +45,7 @@ class Sarima:
         ##except:
         ##    prediction = prediction
         tools = Tools()
-        graph = tools.json_dataset(filename, columns)
+        graph = tools.json_dataset(filename, columns, self.seasonality)
         dataset = tools.get_dataset(filename, columns)
         string_seasonality = tools.seasonality_to_string(self.seasonality)
         if self.precison == "high":
