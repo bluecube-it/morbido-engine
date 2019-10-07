@@ -60,7 +60,7 @@ class Tools:
     def get_dataset(self, filename, column):
         try:
             def dateparser(x): return parse(x)
-            dataset = filename#StringIO(filename)
+            dataset = StringIO(filename)
             df = pd.read_csv(dataset, usecols=[column[0],  column[1]], index_col=[column[0]], parse_dates=[column[0]],  date_parser=dateparser, engine='python')
             df.fillna(value=0, inplace=True)
             return df
