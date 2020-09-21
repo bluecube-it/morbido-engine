@@ -2,7 +2,7 @@ FROM python:3
 
 WORKDIR /usr/src
 
-RUN git clone http://gitlab.internal.bluecube.it/teo/morbido-api.git
+RUN git clone https://github.com/bluecube-it/morbido-engine.git
 
 WORKDIR /usr/src/morbido-api
 
